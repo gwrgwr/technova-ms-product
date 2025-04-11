@@ -3,8 +3,10 @@ package com.technova.msproduct.service;
 import com.technova.Result;
 import com.technova.exceptions.BaseException;
 import com.technova.msproduct.entity.Product;
+import com.technova.msproduct.mapper.ProductMapper;
 import com.technova.msproduct.repository.ProductRepository;
 import com.technova.product.constants.RabbitProductConstants;
+import com.technova.product.dto.ProductDTO;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,12 +41,8 @@ public class ProductService {
     }
 
     @RabbitListener(queues = RabbitProductConstants.PRODUCT_SAVE_QUEUE)
-    public Result<Product> save(Product product) {
-        Product product1 = productRepository.save(product);
-        if (product1 != null) {
-            return Result.success(product1);
-        }
-        return Result.error(new BaseException("Product not saved"));
+    public Result<ProductDTO> save(ProductDTO product) {
+        return Result.success(ProductMapper.toProductDTO(productRepository.save(ProductMapper.toProduct(product))));
     }
 
     @RabbitListener(queues = RabbitProductConstants.PRODUCT_UPDATE_QUEUE)
