@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: technova-ms-product
+  namespace: technova
+  labels:
+    app: technova-ms-product
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: technova-ms-product
+  template:
+    metadata:
+      labels:
+        app: technova-ms-product
+    spec:
+      containers:
+        - name: technova-ms-product
+          image: gwrgwr/technova-ms-product:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MONGODB_URI_API_GATEWAY
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-api-gateway
+                  key: MONGODB_URI_API_GATEWAY

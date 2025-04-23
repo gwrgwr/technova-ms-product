@@ -1,63 +1,33 @@
-pipeline {
-	agent any
+def DOCKER_IMAGE_NAME = 'gwrgwr/technova-ms-product:latest'
+def GITHUB_TOKEN = credentials('github-auth')
+def POD_LABEL = 'kaniko'
+    node(POD_LABEL) {
 
-    environment {
-		DOCKER_IMAGE_NAME = 'gwrgwr/murilo.ramos'
-        DOCKER_CREDENTIALS = 'docker-hub-credentials'
-        GITHUB_TOKEN = credentials('github-token')
-    }
+        stage('Checkout') {
+            checkout scm
+        }
 
-    stages {
-		stage('Checkout') {
-			steps {
-				checkout scm
+
+        stage('Build with Kaniko') {
+            container('kaniko') {
+                sh '''#!/busybox/sh
+                                /kaniko/executor \
+                                  --context `pwd` \
+                                  --dockerfile=./Dockerfile \
+                                  --destination ''' + DOCKER_IMAGE_NAME + ''' \
+                                  --build-arg GITHUB_TOKEN=$GITHUB_TOKEN
+                            '''
             }
         }
 
-        stage('Gerar settings.xml') {
-			steps {
-				script {
-					writeFile file: 'settings.xml', text: """
-<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
-  <servers>
-    <server>
-      <id>github</id>
-      <username>gwrgwr</username>
-      <password>${GITHUB_TOKEN}</password>
-    </server>
-  </servers>
-</settings>
-                    """
+        stage('Deploy to Kubernetes') {
+            container('kubectl') {
+                withKubeConfig([credentialsId: 'jenkins-token', namespace: 'jenkins', serverUrl: 'https://192.168.49.2:8443']) {
+                            sh '''#!/bin/sh
+                                                    kubectl -n technova set image deployment/technova-ms-product technova-ms-product=''' + DOCKER_IMAGE_NAME + '''
+                                                    kubectl -n technova rollout status deployment/technova-ms-product
+                                                '''
+                        }
                 }
-            }
-        }
-
-        stage('Build Docker Image') {
-			steps {
-				script {
-					docker.withRegistry('', DOCKER_CREDENTIALS) {
-						docker.build("${DOCKER_IMAGE_NAME}:ms-product-${env.BUILD_ID}", "--build-arg GITHUB_TOKEN=${GITHUB_TOKEN} -f Dockerfile .")
-                    }
-                }
-            }
-        }
-
-        stage('Push Docker Image') {
-			steps {
-				script {
-					docker.withRegistry('', DOCKER_CREDENTIALS) {
-						sh "docker push ${DOCKER_IMAGE_NAME}:ms-product-${env.BUILD_ID}"
-                    }
-                }
-            }
         }
     }
-
-    post {
-		always {
-			sh 'rm -f settings.xml'
-        }
-    }
-}
