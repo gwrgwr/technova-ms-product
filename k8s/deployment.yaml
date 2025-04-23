@@ -21,8 +21,8 @@ spec:
           ports:
             - containerPort: 8080
           env:
-            - name: MONGODB_URI_API_GATEWAY
+            - name: MONGODB_URI_MS_PRODUCT
               valueFrom:
                 secretKeyRef:
-                  name: mongodb-api-gateway
-                  key: MONGODB_URI_API_GATEWAY
+                  name: mongodb-ms-product
+                  key: MONGODB_URI_MS_PRODUCT
