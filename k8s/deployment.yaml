@@ -26,3 +26,20 @@ spec:
                 secretKeyRef:
                   name: mongodb-ms-product
                   key: MONGODB_URI_MS_PRODUCT
+            - name: SPRING_PROFILES_ACTIVE
+              value: "prod"
+            - name: RABBITMQ_USER
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-credentials
+                  key: username
+            - name: RABBITMQ_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-credentials
+                  key: password
+            - name: RABBITMQ_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-credentials
+                  key: host
