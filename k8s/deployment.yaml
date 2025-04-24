@@ -31,15 +31,15 @@ spec:
             - name: RABBITMQ_USER
               valueFrom:
                 secretKeyRef:
-                  name: rabbitmq-credentials
+                  name: rabbitmq-secret
                   key: username
             - name: RABBITMQ_PASS
               valueFrom:
                 secretKeyRef:
-                  name: rabbitmq-credentials
+                  name: rabbitmq-secret
                   key: password
             - name: RABBITMQ_HOST
               valueFrom:
                 secretKeyRef:
-                  name: rabbitmq-credentials
+                  name: rabbitmq-secret
                   key: host
