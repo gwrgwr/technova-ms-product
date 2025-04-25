@@ -22,10 +22,7 @@ spec:
             - containerPort: 8080
           env:
             - name: MONGODB_URI_MS_PRODUCT
-              valueFrom:
-                secretKeyRef:
-                  name: mongodb-ms-product
-                  key: MONGODB_URI_MS_PRODUCT
+              value: "mongodb+srv://murilomassa72:t0SnsRhgENyGcKG9@technova.dvmjo4p.mongodb.net/technova-ms-product?retryWrites=true&w=majority&appName=Technova"
             - name: SPRING_PROFILES_ACTIVE
               value: "prod"
             - name: RABBITMQ_USER
