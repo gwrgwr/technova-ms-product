@@ -22,6 +22,7 @@ def POD_LABEL = 'kaniko'
             container('kubectl') {
                 withKubeConfig([credentialsId: 'jenkins-token', namespace: 'jenkins', serverUrl: 'https://192.168.49.2:8443']) {
                             sh '''#!/bin/sh
+                                    kubectl -n technova apply -f k8s/
                                     kubectl -n technova set image deployment/technova-ms-product technova-ms-product=''' + DOCKER_IMAGE_NAME + '''
                                     kubectl -n technova rollout status deployment/technova-ms-product
                                 '''
