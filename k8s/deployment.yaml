@@ -29,17 +29,8 @@ spec:
             - name: SPRING_PROFILES_ACTIVE
               value: "prod"
             - name: RABBITMQ_USER
-              valueFrom:
-                secretKeyRef:
-                  name: rabbitmq-secret
-                  key: username
+              value: "admin"
             - name: RABBITMQ_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: rabbitmq-secret
-                  key: password
+              value: "admin"
             - name: RABBITMQ_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: rabbitmq-secret
-                  key: host
+              value: "rabbitmq"
