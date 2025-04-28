@@ -18,11 +18,15 @@ def POD_LABEL = 'kaniko'
             }
         }
 
+        stage('Checkout Helm Chart') {
+            git url: 'https://github.com/gwrgwr/technova-helm.git', branch: 'master', credentialsId: 'github-auth'
+        }
+
         stage('Deploy to Kubernetes') {
             container('kubectl') {
                 withKubeConfig([credentialsId: 'jenkins-token', namespace: 'jenkins', serverUrl: 'https://192.168.49.2:8443']) {
                             sh '''
-                                helm upgrade --install technova ../helm/ \
+                                helm upgrade --install technova ./helm \
                                 --namespace technova \
                                 --set product.image.tag=''' + env.BUILD_ID + ''' \
                                 --wait \
