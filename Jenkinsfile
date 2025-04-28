@@ -9,9 +9,8 @@ def POD_LABEL = 'kaniko'
         stage('Build with Kaniko') {
             container('kaniko') {
                 sh '''
-                #!/bin/bash
                 /kaniko/executor \
-                  --context $(pwd) \
+                  --context `pwd` \
                   --dockerfile=./Dockerfile \
                   --destination=${DOCKER_IMAGE_NAME}:${env.BUILD_ID} \
                   --destination=${DOCKER_IMAGE_NAME}:latest \
