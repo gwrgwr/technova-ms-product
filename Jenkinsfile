@@ -24,7 +24,7 @@ def POD_LABEL = 'kaniko'
                             sh '''
                                 helm upgrade --install technova ../helm/ \
                                 --namespace technova \
-                                --set image.tag=''' + env.BUILD_ID + ''' \
+                                --set product.image.tag=''' + env.BUILD_ID + ''' \
                                 --wait \
                                 --atomic
                                 '''
