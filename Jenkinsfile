@@ -6,11 +6,6 @@ def POD_LABEL = 'kaniko'
             checkout scm
         }
 
-        stage('Checkout Helm Chart') {
-            git url: 'https://github.com/gwrgwr/technova-helm.git', branch: 'master', credentialsId: 'github-auth'
-            sh 'ls -l'
-        }
-
         stage('Build with Kaniko') {
             container('kaniko') {
                 sh '''#!/busybox/sh
@@ -31,7 +26,9 @@ def POD_LABEL = 'kaniko'
             container('kubectl') {
                 withKubeConfig([credentialsId: 'jenkins-token', namespace: 'jenkins', serverUrl: 'https://192.168.49.2:8443']) {
                             sh '''
-                                helm upgrade --install technova ./helm \
+                                helm upgrade --install technova Chart.yaml \
+                                --values values.yaml \
+                                --values charts/product/values.yaml \
                                 --namespace technova \
                                 --set product.image.tag=''' + env.BUILD_ID + ''' \
                                 --wait \
