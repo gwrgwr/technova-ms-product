@@ -8,15 +8,14 @@ def POD_LABEL = 'kaniko'
 
         stage('Build with Kaniko') {
             container('kaniko') {
-                sh '''
-                #!/bin/bash
-                /kaniko/executor \
-                  --context $(pwd) \
-                  --dockerfile=./Dockerfile \
-                  --destination=${DOCKER_IMAGE_NAME}:${env.BUILD_ID} \
-                  --destination=${DOCKER_IMAGE_NAME}:latest \
-                  --build-arg GITHUB_TOKEN=$GITHUB_TOKEN
-                '''
+                sh '''#!/busybox/sh
+                    /kaniko/executor \
+                    --context `pwd` \
+                    --build-arg GITHUB_TOKEN=$GITHUB_TOKEN \
+                    --dockerfile=./Dockerfile \
+                    --destination ''' + DOCKER_IMAGE_NAME + env.BUILD_ID + ''' \
+                    --destination ''' + DOCKER_IMAGE_NAME '''latest \
+              '''
 
             }
         }
