@@ -6,6 +6,11 @@ def POD_LABEL = 'kaniko'
             checkout scm
         }
 
+        stage('Checkout Helm Chart') {
+            git url: 'https://github.com/gwrgwr/technova-helm.git', branch: 'master', credentialsId: 'github-auth'
+            sh 'ls -l ./technova-helm'
+        }
+
         stage('Build with Kaniko') {
             container('kaniko') {
                 sh '''#!/busybox/sh
