@@ -8,7 +8,7 @@ def POD_LABEL = 'kaniko'
 
         stage('Checkout Helm Chart') {
             git url: 'https://github.com/gwrgwr/technova-helm.git', branch: 'master', credentialsId: 'github-auth'
-            sh 'ls -l ./technova-helm'
+            sh 'ls -l'
         }
 
         stage('Build with Kaniko') {
