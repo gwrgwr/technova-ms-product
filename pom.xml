@@ -45,7 +45,7 @@
         <repository>
             <id>github</id>
             <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/gwrgwr/technova-common</url>
+            <url>https://maven.pkg.github.com/muriloramos-dev/technova-common</url>
         </repository>
     </repositories>
     <dependencies>
