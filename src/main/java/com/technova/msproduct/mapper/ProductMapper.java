@@ -6,7 +6,7 @@ import com.technova.product.dto.ProductDTO;
 public class ProductMapper {
     public static ProductDTO toProductDTO(Product product) {
         ProductDTO productDTO = new ProductDTO();
-        productDTO.setId(product.getId().toHexString());
+        productDTO.setId(product.getId());
         productDTO.setName(product.getName());
         productDTO.setDescription(product.getDescription());
         productDTO.setCategory(product.getCategory());

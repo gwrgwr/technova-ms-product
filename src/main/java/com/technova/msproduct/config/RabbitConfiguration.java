@@ -32,6 +32,11 @@ public class RabbitConfiguration {
     }
 
     @Bean
+    public Exchange createProductExchange() {
+        return new FanoutExchange(RabbitProductConstants.PRODUCT_FANOUT_EXCHANGE, true, false);
+    }
+
+    @Bean
     public Queue queueProductSave() {
         return new Queue(RabbitProductConstants.PRODUCT_SAVE_QUEUE, true);
     }

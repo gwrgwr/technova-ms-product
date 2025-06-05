@@ -1,13 +1,13 @@
 package com.technova.msproduct.entity;
 
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import com.technova.product.enums.ProductStatus;
+import jakarta.persistence.*;
 
-@Document(collection = "product")
+@Entity
 public class Product {
     @Id
-    private ObjectId id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private String id;
 
     private String name;
 
@@ -17,17 +17,22 @@ public class Product {
 
     private String imageURL;
 
+    private Integer quantity;
+
+    @Enumerated(EnumType.STRING)
+    private ProductStatus status = ProductStatus.AVAILABLE;
+
     private Double price;
 
     private String vendorId;
 
     private String companyName;
 
-    public ObjectId getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -87,17 +92,34 @@ public class Product {
         this.companyName = companyName;
     }
 
-    public Product(ObjectId id, String name, String description, String category, String imageURL, Double price, String vendorId, String companyName) {
+    public Product(String id, String name, String description, String category, String imageURL, Integer quantity, Double price, String vendorId, String companyName) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.category = category;
         this.imageURL = imageURL;
+        this.quantity = quantity;
         this.price = price;
         this.vendorId = vendorId;
         this.companyName = companyName;
     }
 
     public Product() {
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public ProductStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProductStatus status) {
+        this.status = status;
     }
 }
