@@ -13,6 +13,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -29,6 +30,7 @@ public class ProductService {
     }
 
     @RabbitListener(queues = RabbitProductConstants.PRODUCT_GET_ID_QUEUE)
+    @Transactional(readOnly = true)
     public Result<Product> findById(String id) {
         Product product = productRepository.findById(id).orElse(null);
         if (product != null) {
@@ -38,12 +40,14 @@ public class ProductService {
     }
 
     @RabbitListener(queues = RabbitProductConstants.PRODUCT_GET_COMPANY_NAME_QUEUE)
+    @Transactional(readOnly = true)
     public Result<List<Product>> findAll(String companyName) {
         List<Product> list = productRepository.findByCompanyName(companyName).orElse(null);
         return Result.success(Objects.requireNonNullElseGet(list, List::of));
     }
 
     @RabbitListener(queues = RabbitProductConstants.PRODUCT_GET_ID_QUEUE)
+    @Transactional(readOnly = true)
     public Result<List<Product>> findByVendorId(String vendorId) {
         List<Product> list = productRepository.findByVendorId(vendorId).orElse(null);
         return Result.success(Objects.requireNonNullElseGet(list, List::of));
